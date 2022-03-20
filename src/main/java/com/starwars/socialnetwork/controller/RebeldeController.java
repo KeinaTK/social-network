@@ -19,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.starwars.socialnetwork.dto.LocalizacaoDTO;
 import com.starwars.socialnetwork.dto.RebeldeCreateDTO;
 import com.starwars.socialnetwork.dto.RebeldeListDTO;
+import com.starwars.socialnetwork.dto.TrocaItensDTO;
 import com.starwars.socialnetwork.service.RebeldeService;
 
 @RestController
@@ -44,5 +45,11 @@ public class RebeldeController {
     public ResponseEntity<RebeldeListDTO> atualizarLocalizacao(@PathVariable Long id, @RequestBody @Valid LocalizacaoDTO dto) {
     	RebeldeListDTO rebeldeUpdate = service.updateLocation(id, dto);
     	return ResponseEntity.ok(rebeldeUpdate);
+    }
+    
+    @PostMapping("/troca")
+    public ResponseEntity<?> trocaItens(@RequestBody List<TrocaItensDTO> rebeldes) {
+    	service.trocaItens(rebeldes);
+    	return ResponseEntity.noContent().build();
     }
 }

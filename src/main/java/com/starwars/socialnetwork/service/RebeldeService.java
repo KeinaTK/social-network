@@ -8,10 +8,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.starwars.socialnetwork.dto.InventarioDTO;
 import com.starwars.socialnetwork.dto.LocalizacaoDTO;
 import com.starwars.socialnetwork.dto.RebeldeCreateDTO;
 import com.starwars.socialnetwork.dto.RebeldeListDTO;
+import com.starwars.socialnetwork.dto.TrocaItensDTO;
+import com.starwars.socialnetwork.exception.NegociacaoInvalidaException;
 import com.starwars.socialnetwork.exception.NoContentException;
+import com.starwars.socialnetwork.model.Inventario;
 import com.starwars.socialnetwork.model.Localizacao;
 import com.starwars.socialnetwork.model.Rebelde;
 import com.starwars.socialnetwork.repository.RebeldeRepository;
@@ -47,6 +51,46 @@ public class RebeldeService {
 			return  modelMapper.map(rebelde, RebeldeListDTO.class);
 		}
 		throw new NoContentException();
+	}
+
+	public void trocaItens(List<TrocaItensDTO> trocaItensDTO) {
+		if(trocaItensDTO.size() != 2) throw new NegociacaoInvalidaException("É necessário que 2 Rebeldes participem da negociação");
+		
+		List<Long> ids = trocaItensDTO
+			.stream()
+			.map(rebelde -> rebelde.getRebeldeId())
+			.collect(Collectors.toList());
+		
+		List<Rebelde> rebeldes = rebeldeRepository.findAllById(ids);
+		if(rebeldes.size() != 2) throw new NegociacaoInvalidaException("Rebelde não encontrado");;
+		
+		// Algorítmo implementado com complexidade quadrática (O(n²)).
+		// Porém, estamos garantindo que N = 2 em todos os casos, portanto,
+		// a complexidade torna-se O(2²) = O(4) ~ O(1) (Dominação assintótica).
+		rebeldes.forEach(rebelde -> {
+			trocaItensDTO.forEach(item -> {
+				if(rebelde.getId() == item.getRebeldeId()) {
+					InventarioDTO itemNegociado = item.getInventario();
+					Inventario itemArmazenado = rebelde.getInventario();
+					if(itemNegociado.getAgua() > itemArmazenado.getAgua()) throw new NegociacaoInvalidaException("Rebelde não pode negociar esta quantia de água");
+					if(itemNegociado.getArma() > itemArmazenado.getArma()) throw new NegociacaoInvalidaException("Rebelde não pode negociar esta quantia de arma");
+					if(itemNegociado.getComida() > itemArmazenado.getComida()) throw new NegociacaoInvalidaException("Rebelde não pode negociar esta quantia de comida");
+					if(itemNegociado.getMunicao() > itemArmazenado.getMunicao()) throw new NegociacaoInvalidaException("Rebelde não pode negociar esta quantia de munição");
+				}
+			});
+		});
+		
+		if(trocaItensDTO.get(0).getTotalPontos() != trocaItensDTO.get(1).getTotalPontos()) 
+			throw new NegociacaoInvalidaException("Negociação não pode ser feita! Quantidade de pontos entre as ofertas não equivatente");
+		Inventario oferta1 = modelMapper.map(trocaItensDTO.get(0).getInventario(), Inventario.class);
+		Inventario oferta2 = modelMapper.map(trocaItensDTO.get(1).getInventario(), Inventario.class);
+		
+		Inventario ofertaDiferenca = oferta1.subtraiInventarios(oferta2);
+		
+
+		rebeldes.get(0).setInventario(rebeldes.get(0).getInventario().subtraiInventarios(ofertaDiferenca));
+		rebeldes.get(1).setInventario(rebeldes.get(1).getInventario().somaInventarios(ofertaDiferenca));
+		rebeldeRepository.saveAll(rebeldes);
 	}
 
 }
