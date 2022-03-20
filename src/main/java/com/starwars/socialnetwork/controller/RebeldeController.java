@@ -3,6 +3,8 @@ package com.starwars.socialnetwork.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +31,7 @@ public class RebeldeController {
     }
 
     @PostMapping
-    public ResponseEntity<RebeldeListDTO> create(@RequestBody RebeldeCreateDTO requestDto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<RebeldeListDTO> create(@RequestBody @Valid RebeldeCreateDTO requestDto, UriComponentsBuilder uriBuilder) {
     	RebeldeListDTO listDTO = service.create(requestDto);
         URI uri = uriBuilder.path("/rebeldes/{id}").buildAndExpand(listDTO.getId()).toUri();
 		return ResponseEntity.created(uri).body(listDTO);
