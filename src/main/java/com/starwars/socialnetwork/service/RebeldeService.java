@@ -1,5 +1,6 @@
 package com.starwars.socialnetwork.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,11 +83,16 @@ public class RebeldeService {
 		
 		if(trocaItensDTO.get(0).getTotalPontos() != trocaItensDTO.get(1).getTotalPontos()) 
 			throw new NegociacaoInvalidaException("Negociação não pode ser feita! Quantidade de pontos entre as ofertas não equivatente");
-		Inventario oferta1 = modelMapper.map(trocaItensDTO.get(0).getInventario(), Inventario.class);
-		Inventario oferta2 = modelMapper.map(trocaItensDTO.get(1).getInventario(), Inventario.class);
-		
-		Inventario ofertaDiferenca = oferta1.subtraiInventarios(oferta2);
-		
+		List<Inventario> ofertas = new ArrayList<>();
+		rebeldes.forEach(rebelde -> {
+			trocaItensDTO.forEach(item -> {
+				if(rebelde.getId() == item.getRebeldeId()) {
+					ofertas.add(modelMapper.map(item.getInventario(), Inventario.class));
+				}
+			});
+		});
+			
+		Inventario ofertaDiferenca = ofertas.get(0).subtraiInventarios(ofertas.get(1));
 
 		rebeldes.get(0).setInventario(rebeldes.get(0).getInventario().subtraiInventarios(ofertaDiferenca));
 		rebeldes.get(1).setInventario(rebeldes.get(1).getInventario().somaInventarios(ofertaDiferenca));
