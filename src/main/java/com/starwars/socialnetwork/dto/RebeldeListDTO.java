@@ -1,16 +1,14 @@
 package com.starwars.socialnetwork.dto;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
-@ToString
-public class RebeldeCreateDTO {
+public class RebeldeListDTO {
 
-    private String nome;
+	private Long id;
+	private String nome;
     private Integer idade;
     private GeneroEnum genero;
     private LocalizacaoDTO localizacao;
     private InventarioDTO inventario;
-
 }

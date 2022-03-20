@@ -3,7 +3,8 @@ package com.starwars.socialnetwork.dto;
 import lombok.Data;
 
 @Data
-public class Inventario {
+public class InventarioDTO {
+	
     private Integer arma;
     private Integer municao;
     private Integer agua;
