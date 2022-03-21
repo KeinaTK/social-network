@@ -77,6 +77,7 @@ public class RebeldeService {
 					if(itemNegociado.getArma() > itemArmazenado.getArma()) throw new NegociacaoInvalidaException("Rebelde não pode negociar esta quantia de arma");
 					if(itemNegociado.getComida() > itemArmazenado.getComida()) throw new NegociacaoInvalidaException("Rebelde não pode negociar esta quantia de comida");
 					if(itemNegociado.getMunicao() > itemArmazenado.getMunicao()) throw new NegociacaoInvalidaException("Rebelde não pode negociar esta quantia de munição");
+					if(rebelde.isTraidor()) throw new NegociacaoInvalidaException("TRAIDORRR!");
 				}
 			});
 		});

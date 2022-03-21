@@ -26,4 +26,7 @@ public class Rebelde {
     private Inventario inventario;
     private Integer denuncias = 0;
 
+    public boolean isTraidor() {
+        return denuncias >=3;
+    }
 }
