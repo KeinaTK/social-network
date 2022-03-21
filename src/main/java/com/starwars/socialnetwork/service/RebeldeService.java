@@ -99,4 +99,15 @@ public class RebeldeService {
 		rebeldeRepository.saveAll(rebeldes);
 	}
 
+	public RebeldeListDTO denuncia(long id) {
+		Optional<Rebelde> optional = rebeldeRepository.findById(id);
+		if(optional.isPresent()) {
+			Rebelde rebelde = optional.get();
+			rebelde.setDenuncias(rebelde.getDenuncias()+1);
+			rebeldeRepository.save(rebelde);
+			return  modelMapper.map(rebelde, RebeldeListDTO.class);
+		}
+		throw new NoContentException();
+	}
+
 }

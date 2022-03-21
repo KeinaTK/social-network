@@ -52,4 +52,10 @@ public class RebeldeController {
     	service.trocaItens(rebeldes);
     	return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/denuncia")
+    public ResponseEntity<RebeldeListDTO> denunciaTraidor(@PathVariable Long id) {
+        return ResponseEntity.ok(service.denuncia(id));
+    }
+    
 }

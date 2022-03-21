@@ -24,5 +24,6 @@ public class Rebelde {
     private Localizacao localizacao;
     @OneToOne(cascade = CascadeType.ALL)
     private Inventario inventario;
+    private Integer denuncias = 0;
 
 }

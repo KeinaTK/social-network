@@ -11,4 +11,5 @@ public class RebeldeListDTO {
     private GeneroEnum genero;
     private LocalizacaoDTO localizacao;
     private InventarioDTO inventario;
+    private Boolean traidor;
 }
