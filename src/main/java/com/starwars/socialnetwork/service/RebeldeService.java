@@ -111,4 +111,11 @@ public class RebeldeService {
 		throw new NoContentException();
 	}
 
+	public Double relatorioTraidor() {
+		Double rebeldes = (double)rebeldeRepository.totalRebeldes();
+		Double traidores = (double)rebeldeRepository.totalTraidores();
+		if(traidores == 0) return 0.0;
+		return traidores / rebeldes;
+	}
+
 }

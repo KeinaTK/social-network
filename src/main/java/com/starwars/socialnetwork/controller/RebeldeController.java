@@ -57,5 +57,20 @@ public class RebeldeController {
     public ResponseEntity<RebeldeListDTO> denunciaTraidor(@PathVariable Long id) {
         return ResponseEntity.ok(service.denuncia(id));
     }
+
+    @GetMapping("/relatorios/traidores")
+    public Double relatorioTraidor() {
+        return service.relatorioTraidor();
+    }
+
+    @GetMapping("/relatorios/rebeldes")
+    public Double relatorioRebeldes() {
+        return 1.0 - service.relatorioTraidor();
+    }
+
+    // @GetMapping("/relatorios/")
+    // public Double relatorioRebeldes() {
+    //     return 1.0 - service.relatorioTraidor();
+    // }
     
 }
